@@ -13,23 +13,40 @@ const WikipediaPage = ({ title }) => {
   }, [title]);
 
   return (
-    <div className="wikipedia-page">
-      <h1 className="text-3xl font-bold mb-4">{title}</h1>
-      <div
-        className="wikipedia-content"
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
+    <div className="wrapper">
+      <div className="click-history">Test</div>
+      <div className="wikipedia-page">
+        {/* <h1 className="text-3xl font-bold mb-4">{title}</h1>*/}
+        <div
+          className="wikipedia-content"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      </div>
       <style>{`
+       .wrapper {
+          display:flex;
+        }
+
+        .click-history {
+        background-color: lightgray;
+        width:25%;
+        max-height:100vh;}
         .wikipedia-page {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Lato', 'Helvetica', 'Arial', sans-serif;
           background-color: #f8f9fa;
           min-height: 100vh;
+          max-height: 100vh;
+          width: 75%;
           display: flex;
           justify-content: center;
-          padding: 20px;
+          overflow: scroll;
+          scrollbar-color: red orange;
+          scrollbar-width: thick;
+          padding:18px;
+          border: 4px solid white
         }
         .wikipedia-content {
-          max-width: 1000px;
+          
           width: 100%;
           background-color: white;
           padding: 30px;
