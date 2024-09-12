@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import Navbar from "./components/Navbar";
 import { UserContextProvider } from "../context/userContext";
 import WikipediaPage from "./pages/WikipediaPage";
+import { WikiContextProvider } from "../context/wikiContext";
 
 //axios.defaults.baseURL = "http://localhost:8000";
 //axios.defaults.withCredentials = true;
@@ -15,14 +16,16 @@ import WikipediaPage from "./pages/WikipediaPage";
 function App() {
   return (
     <UserContextProvider>
-      <Navbar />
-      <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/wiki" element={<WikipediaPage title="Clown" />} />
-      </Routes>
+      <WikiContextProvider>
+        <Navbar />
+        <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/wiki" element={<WikipediaPage title="Clown" />} />
+        </Routes>
+      </WikiContextProvider>
     </UserContextProvider>
   );
 }

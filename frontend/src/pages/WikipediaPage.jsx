@@ -1,20 +1,52 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import fetchWikipediaContent from "../components/fetchWikipediaContent";
+import wikiContext from "../../context/wikiContext";
 
 const WikipediaPage = ({ title }) => {
+  const { startingArticle, endingArticle } = useContext(wikiContext);
+
   const [content, setContent] = useState("");
+  const [currentArticle, setCurrentArticle] = useState(startingArticle);
+  const loadContent = useCallback(async (article) => {
+    const html = await fetchWikipediaContent(article);
+    setContent(html);
+  }, []);
+  useEffect(() => {
+    loadContent(currentArticle);
+    if (currentArticle == endingArticle.replace(/ /g, "_")) {
+      console.log("You won!!");
+    }
+  }, [currentArticle, loadContent]);
+
+  const handleLinkClick = useCallback((event) => {
+    event.preventDefault();
+    const href = event.target.getAttribute("href");
+    if (href && href.startsWith("/wiki/")) {
+      const newArticle = decodeURIComponent(href.split("/wiki/")[1]);
+      setCurrentArticle(newArticle);
+      const page = document.querySelector(".wikipedia-page");
+      page.scrollTop = 0;
+    }
+  }, []);
 
   useEffect(() => {
-    const loadContent = async () => {
-      const html = await fetchWikipediaContent(title);
-      setContent(html);
-    };
-    loadContent();
-  }, [title]);
+    const content = document.querySelector(".wikipedia-content");
+
+    if (content) {
+      content.addEventListener("click", handleLinkClick);
+
+      return () => content.removeEventListener("click", handleLinkClick);
+    }
+  }, [handleLinkClick]);
 
   return (
     <div className="wrapper">
-      <div className="click-history">Test</div>
+      <div className="sidebar">
+        <div className="title-container">
+          {startingArticle} > {endingArticle}
+        </div>
+        <div className="click-history"></div>
+      </div>
       <div className="wikipedia-page">
         {/* <h1 className="text-3xl font-bold mb-4">{title}</h1>*/}
         <div
@@ -25,25 +57,31 @@ const WikipediaPage = ({ title }) => {
       <style>{`
        .wrapper {
           display:flex;
+          flex-direction: row;
+          width: 100%;
+          height:100vh;
         }
 
         .click-history {
         background-color: lightgray;
         width:25%;
-        max-height:100vh;}
+        height:100%;
+        display: flex;
+        justify-content: center;
+              }
         .wikipedia-page {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Lato', 'Helvetica', 'Arial', sans-serif;
           background-color: #f8f9fa;
-          min-height: 100vh;
-          max-height: 100vh;
+          min-height: 100%;
+          max-height: 100%;
           width: 75%;
           display: flex;
           justify-content: center;
           overflow: scroll;
-          scrollbar-color: red orange;
-          scrollbar-width: thick;
-          padding:18px;
-          border: 4px solid white
+          scrollbar-color: blue;
+          scrollbar-width: thin;
+          
+         
         }
         .wikipedia-content {
           
@@ -51,7 +89,7 @@ const WikipediaPage = ({ title }) => {
           background-color: white;
           padding: 30px;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-          border-radius: 4px;
+          
         }
         .wikipedia-content h1, .wikipedia-content h2, .wikipedia-content h3, .wikipedia-content h4, .wikipedia-content h5, .wikipedia-content h6 {
           border-bottom: 1px solid #a2a9b1;
