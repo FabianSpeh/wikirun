@@ -7,10 +7,10 @@ import Login from "./pages/Login";
 import { Toaster } from "react-hot-toast";
 import Navbar from "./components/Navbar";
 import { UserContextProvider } from "../context/userContext";
-import Wikipedia from "./pages/Wikipedia";
+import WikipediaPage from "./pages/WikipediaPage";
 
-axios.defaults.baseURL = "http://localhost:8000";
-axios.defaults.withCredentials = true;
+//axios.defaults.baseURL = "http://localhost:8000";
+//axios.defaults.withCredentials = true;
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/wiki" element={<Wikipedia />} />
+        <Route path="/wiki" element={<WikipediaPage title="Clown" />} />
       </Routes>
     </UserContextProvider>
   );
